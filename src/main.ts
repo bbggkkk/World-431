@@ -5,5 +5,5 @@ import './style/style.scss';
 (function(){
     
     window.world = init(setting);
-
+    
 })();
