@@ -5,34 +5,34 @@
  * @param {number} tickTime - 월드 갱신 주기 (ms)
  */
 const init = (setting:Setting) => {
-    const [ x, y ] = setting.worldSize;
-    const tick     = setting.tickTime;
 
-    const world    = new World({
-        x : x,
-        y : y,
-        tick : tick
-    });
+    const world    = new World(setting);
 
     return world;
 }
 
-interface WorldConstructor {
-    x : number;
-    y : number;
-    tick : number;
-}
 class World {
 
     x:number;
     y:number;
+    w:string;
+    h:string;
     tick:number;
     world:HTMLElement|undefined;
+    backgroundColor:string;
+    unitColor:string;
 
-    constructor({ x, y, tick }:WorldConstructor){
+    constructor(setting:Setting){
+        const [ x, y ] = setting.worldSize;
+        const tick     = setting.tickTime;
+
         this.x     = x;
         this.y     = y;
+        this.w     = '100%';
+        this.h     = '100%';
         this.tick  = tick;
+        this.backgroundColor = setting.backgroundColor;
+        this.unitColor       = setting.unitColor;
         this.world = this.makeWorld();
 
     }
@@ -42,10 +42,19 @@ class World {
      */
     makeWorld(){
         const world = document.createElement('canvas');
-        world.style.width = '100%';
-        world.style.height = '100%';
+        this.setWorldStyle(world);
+        world.id = 'world';
         document.body.append(world);
+        return world;
+    }
 
+    /**
+     * @description 월드에 스타일을 적용하는 함수
+     */
+    setWorldStyle(world:HTMLElement){
+        world.style.width = this.w;
+        world.style.height = this.h;
+        world.style.backgroundColor = this.backgroundColor;
         return world;
     }
 

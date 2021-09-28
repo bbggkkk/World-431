@@ -7,5 +7,7 @@ declare global {
     interface Setting {
         worldSize : Array<number>;
         tickTime : number;
+        backgroundColor : string;
+        unitColor : string;
     }
 }
