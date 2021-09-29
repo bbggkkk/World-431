@@ -58,28 +58,9 @@ export class Simulator extends Grid {
 
     update():Simulator{
         const updateTarget:Array<string> = Object.keys(this.prevMap);
-        // const updateTarget:Array<string> = this.getUpdateTarget();
-        // const onList = updateTarget.filter(item => {
-        //     const cnt = this.cntIsLife(item!);
-        //     switch (cnt){
-        //         case 2 :
-        //             if(this.map[item!].life === true){
-        //                 return true;
-        //             }else{
-        //                 return false;
-        //             }
-        //             break;
-        //         case 3 :
-        //             return true;
-        //             break;
-        //         default :
-        //             return false;
-        //     }
-        // });
-        // console.log(updateTarget);
         this.setMapList(updateTarget, (item:string) => {
             const cnt = this.cntIsLife(item!);
-            if(cnt === 0 && this.map[item].life === true) console.log(this.map[item]);
+            // if(cnt === 0 && this.map[item].life === true) console.log(this.map[item]);
             switch (cnt){
                 case 2 :
                     if(this.map[item!].life === true){
