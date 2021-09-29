@@ -43,7 +43,7 @@ export class Grid {
         this.setPrevMap(key);
     }
 
-    setPrevMap(key:Array<string>){
+    setPrevMap(key:Array<string>):void{
         key.forEach(item => {
             this.prevMap[item] = this.map[item].life;
         });
