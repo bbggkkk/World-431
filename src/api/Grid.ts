@@ -3,6 +3,9 @@ export class Grid {
     y:number;
     map:any;
     prevMap:any;
+    prevTrueMap:any;
+    public lifeCount:number;
+
 
     constructor(setting:Setting, map:any){
         const [ x, y ] = setting.worldSize;
@@ -10,19 +13,23 @@ export class Grid {
         this.x = x;
         this.y = y;
         this.map = map;
-        this.prevMap = Object.keys(this.map).reduce((acc:any,item:string) => {
-            acc[item] = this.map[item].life;
-            return acc;
-        },{});
+        this.prevMap = {};
+        this.setMapList(Object.keys(this.map));
+        this.lifeCount = this.cntLifeDot();
     }
 
-    on(target:string):Grid{
+
+    cntLifeDot(){
+        return Object.keys(this.prevTrueMap).length;
+    }
+
+    on(target:string|Array<string>):Grid{
         this.setMapList(target,(item:string):void => {
             this.map[item].life = true;
         });
         return this;
     }
-    off(target:string):Grid{
+    off(target:string|Array<string>):Grid{
         this.setMapList(target,(item:string):void => {
             this.map[item].life = false;
         });
@@ -34,18 +41,26 @@ export class Grid {
         });
         return this;
     }
-    setMapList(target:string|Array<string>,cbk:Function):void{
+    setMapList(target:string|Array<string>,cbk?:Function):void{
         const key = typeof target === 'string' ? [target] : target;
-        key.forEach(item => {
-            cbk(item);
-        });
+        if(cbk){
+            key.forEach(item => {
+                cbk(item);
+            });
+        }
+        // console.log(key);
         //렌더링
         this.setPrevMap(key);
     }
 
     setPrevMap(key:Array<string>):void{
+        this.prevTrueMap = this.prevTrueMap ? this.prevTrueMap : {};
         key.forEach(item => {
             this.prevMap[item] = this.map[item].life;
+            if(this.map[item].life){
+                this.prevTrueMap[item] = true;
+            }
         });
+        this.lifeCount = this.cntLifeDot();
     }
 }

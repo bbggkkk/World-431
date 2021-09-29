@@ -1,3 +1,4 @@
+import { Demo } from "@src/api/Demo";
 import { Grid } from "@src/api/Grid";
 
 export {};
@@ -5,7 +6,8 @@ export {};
 declare global {
     interface Window {
         dotList: Array<Dot>;
-        world: Grid;
+        world: Simulator;
+        demo: Demo;
     }
     interface Setting {
         worldSize : Array<number>;

@@ -13,14 +13,18 @@ const size     = x * y;
  * @param {number} tickTime - 월드 갱신 주기 (ms)
  */
 const init = (setting:Setting) => {
-
+    let cnt = 0;
     const list:any = new Array(size).fill(1).reduce((acc, item, idx) => {
         const $x = Math.floor(idx/x);
         const $y = idx%y;
-        acc[`${$x}-${$y}-${idx}`] = new Dot(true, $x, $y);
+        const tf = Math.round(Math.random()*10)%2 === 0 ? true : false;
+        // const tf = Math.round(Math.random()*10)%2 === 0 && cnt < 10 ? true : false;
+        // if(tf) cnt++;
+        // const tf = idx < 3 ? true : false;
+        acc[`${$x}-${$y}-${idx}`] = new Dot(tf, $x, $y);
         return acc;
     },{});
-    const grid = new Simulator(setting,list);
+    const grid = new Simulator(setting, list);
     return grid;
     
 }
