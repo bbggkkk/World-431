@@ -75,11 +75,6 @@ export class Simulator extends Grid {
                 default :
                     this.map[item].life = false;
             }
-            // if(this.map[item].life === true){
-            //     this.map[item].life = false;
-            // }else{
-            //     this.map[item].life = true;
-            // }
         });
         return this;
     }
