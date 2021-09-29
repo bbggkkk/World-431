@@ -1,7 +1,7 @@
 import { Dot } from './api/Dot';
 
 import setting from '@src/setting';
-import { World } from './api/World';
+import { Simulator } from './api/Simulator';
 
 const [ x, y ] = setting.worldSize;
 const size     = x * y;
@@ -20,7 +20,7 @@ const init = (setting:Setting) => {
         acc[`${$x}-${$y}-${idx}`] = new Dot(true, $x, $y);
         return acc;
     },{});
-    const grid = new World(setting,list);
+    const grid = new Simulator(setting,list);
     return grid;
     
 }
