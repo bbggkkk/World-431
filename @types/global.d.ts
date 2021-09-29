@@ -1,8 +1,11 @@
+import { Grid } from "@src/api/Grid";
+
 export {};
 
 declare global {
     interface Window {
-        world: Object;
+        dotList: Array<Dot>;
+        world: Grid;
     }
     interface Setting {
         worldSize : Array<number>;
