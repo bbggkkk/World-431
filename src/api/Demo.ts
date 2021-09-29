@@ -8,7 +8,7 @@ export class Demo {
         this.wrapper = wrapper;
         this.children = this.wrapper.querySelectorAll(':scope > div');
         const [x,y] = setting.worldSize;
-        this.wrapper.style.gridTemplate = `repeat(${x},(${100/x}%))/repeat(${y},${100/y}%)`;
+        this.wrapper.style.gridTemplate = `repeat(${x},${100/x}%)/repeat(${y},${100/y}%)`;
     }
 
     render(sim:Simulator){
