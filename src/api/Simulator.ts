@@ -1,8 +1,10 @@
 import { Grid } from "./Grid";
+import { Demo } from "./Demo";
 
 export class Simulator extends Grid {
 
     protected interval:any;
+    protected renderer:Demo;
     public tick:number;
     constructor(setting:Setting, map:any){
         super(setting, map);
@@ -11,16 +13,21 @@ export class Simulator extends Grid {
         // this.start();
     }
 
-    start(){
+    start(demo:Demo){
+        if(this.interval !== undefined)   return;
+        this.renderer = demo;
+        this.renderer.start();
         this.interval = setInterval(() => {
-            console.time('interval');
+            // console.time('interval');
             this.update();
-            window.demo.render(this); 
-            console.timeEnd('interval');
+            this.renderer.render(this); 
+            // console.timeEnd('interval');
         }, this.tick);
     }
     stop(){
         clearInterval(this.interval);
+        this.renderer.stop();
+        this.interval = undefined;
     }
 
     cntIsLife(position:string){
@@ -72,19 +79,19 @@ export class Simulator extends Grid {
             switch (cnt){
                 case 2 :
                     if(this.map[item].life === true){
-                        console.log(item, cnt, this.map[item].life, 'true');
+                        // console.log(item, cnt, this.map[item].life, 'true');
                         this.map[item].life = true;
                     }else{
-                        console.log(item, cnt, this.map[item].life, 'false');
+                        // console.log(item, cnt, this.map[item].life, 'false');
                         this.map[item].life = false;
                     }
                     break;
                 case 3 :
-                    console.log(item, cnt, this.map[item].life, 'true');
+                    // console.log(item, cnt, this.map[item].life, 'true');
                     this.map[item].life = true;
                     break;
                 default :
-                    console.log(item, cnt, this.map[item].life, 'false');
+                    // console.log(item, cnt, this.map[item].life, 'false');
                     this.map[item].life = false;
             }
         });

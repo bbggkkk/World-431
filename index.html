@@ -12,6 +12,10 @@
         /* .true {
             background:red;
         } */
+
+        #wrapper:not(.start) > div {
+            box-shadow:0 0 0 1px rgba(128,128,128,1);
+        }
     </style>
 </head>
 <body>
@@ -20,8 +24,8 @@
 
     <div style="display:flex; gap:12px; justify-content:center; align-items:center;">
         <button onclick="javascript:window.demo.render(window.world);">렌더</button>
-        <button onclick="javascript:window.world.start();">시뮬레이션 시작</button>
-        <button onclick="javascript:window.world.stop();">시뮬레이션 정지</button>
+        <button onclick="javascript:window.world.start(window.demo);">시뮬레이션 시작</button>
+        <button onclick="javascript:window.world.stop(window.demo);">시뮬레이션 정지</button>
     </div>
     <script src="./dist/main.js"></script>
 

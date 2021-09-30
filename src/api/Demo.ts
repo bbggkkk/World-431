@@ -24,4 +24,13 @@ export class Demo {
             }
         });
     }
+
+    start(){
+        this.wrapper.classList.add('start');
+        // this.children.forEach((item:Node) => (item as HTMLElement).style.border = '1px solid #ccc')
+    }
+    stop(){
+        this.wrapper.classList.remove('start');
+        // this.children.forEach((item:Node) => (item as HTMLElement).style.border = 'none')
+    }
 }
