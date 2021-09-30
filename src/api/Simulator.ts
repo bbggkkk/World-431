@@ -5,10 +5,12 @@ export class Simulator extends Grid {
 
     protected interval:any;
     protected renderer:Renderer;
+    public color:string;
     public tick:number;
     constructor(setting:Setting, map:any){
         super(setting, map);
         this.tick = setting.tickTime;
+        this.color = setting.unitColor;
 
     }
 

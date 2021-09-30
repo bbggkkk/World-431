@@ -34,6 +34,7 @@ export class Renderer {
         this.canvas.style.width  = '100vmin';
         this.canvas.style.height = '100vmin';
         this.ctx     = this.canvas.getContext('2d')!;
+        this.ctx.fillStyle = this.world.color;
         // this.setCanvasSize();
         this.wrapper.append(this.canvas);
     }
