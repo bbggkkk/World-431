@@ -8,13 +8,15 @@ export class Simulator extends Grid {
         super(setting, map);
         this.tick = setting.tickTime;
 
-        this.start();
+        // this.start();
     }
 
     start(){
         this.interval = setInterval(() => {
+            console.time('interval');
             this.update();
-            window.demo.render(this);
+            window.demo.render(this); 
+            console.timeEnd('interval');
         }, this.tick);
     }
     stop(){
@@ -24,9 +26,12 @@ export class Simulator extends Grid {
     cntIsLife(position:string){
         let cnt = 0;
         const neighbor = this.getNeighbor(position);
+        // console.log('neighbor ::',neighbor);
         neighbor.forEach(item => {
-            if(item === undefined) return;
-            if(this.map[item] && this.map[item].life === true)
+            // if(item === undefined) return;
+            // console.log('cntIsLife ::',this.prevMap[item]);
+            if(this.prevMap[item])
+            // if(this.prevMap[item] && this.prevMap[item].life === true)
             cnt++;
         });
         return cnt;
@@ -37,7 +42,7 @@ export class Simulator extends Grid {
         const index = (y:number,x:number):number => {
             return (y * this.y)+x;
         }
-        return [
+        const value:Array<string> = [
             this.map[`${y-1}-${x-1}-${index(y-1,x-1)}`] ? `${y-1}-${x-1}-${index(y-1,x-1)}`    : '',
             this.map[`${y-1}-${x}-${index(y-1,x)}`]     ? `${y-1}-${x}-${index(y-1,x)}`        : '',
             this.map[`${y-1}-${x+1}-${index(y-1,x+1)}`] ? `${y-1}-${x+1}-${index(y-1,x+1)}`    : '',
@@ -46,33 +51,40 @@ export class Simulator extends Grid {
             this.map[`${y+1}-${x-1}-${index(y+1,x-1)}` ]? `${y+1}-${x-1}-${index(y+1,x-1)}`    : '',
             this.map[`${y+1}-${x}-${index(y+1,x)}`]     ? `${y+1}-${x}-${index(y+1,x)}`        : '',
             this.map[`${y+1}-${x+1}-${index(y+1,x+1)}`] ? `${y+1}-${x+1}-${index(y+1,x+1)}`    : ''
-        ]
+        ].filter(item => item !== '');
+        return value;
     }
 
     getUpdateTarget():Array<string>{
         return Array.from(new Set(Object.keys(this.prevTrueMap).reduce((acc:Array<string>,item:string) => {
-            const arr:Array<string> = this.getNeighbor(item).filter(item => item !== '');
+            const arr:Array<string> = this.getNeighbor(item);
             return acc.concat(arr);
-        },[])));
+        },[]).concat(Object.keys(this.prevTrueMap)) ));
     }
 
     update():Simulator{
-        const updateTarget:Array<string> = Object.keys(this.prevMap);
+        const updateTarget:Array<string> = this.getUpdateTarget();
+        // const updateTarget:Array<string> = Object.keys(this.prevMap);
+        // console.log(this.prevMap);
         this.setMapList(updateTarget, (item:string) => {
-            const cnt = this.cntIsLife(item!);
+            const cnt = this.cntIsLife(item);
             // if(cnt === 0 && this.map[item].life === true) console.log(this.map[item]);
             switch (cnt){
                 case 2 :
-                    if(this.map[item!].life === true){
+                    if(this.map[item].life === true){
+                        console.log(item, cnt, this.map[item].life, 'true');
                         this.map[item].life = true;
                     }else{
+                        console.log(item, cnt, this.map[item].life, 'false');
                         this.map[item].life = false;
                     }
                     break;
                 case 3 :
+                    console.log(item, cnt, this.map[item].life, 'true');
                     this.map[item].life = true;
                     break;
                 default :
+                    console.log(item, cnt, this.map[item].life, 'false');
                     this.map[item].life = false;
             }
         });
