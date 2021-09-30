@@ -41,6 +41,6 @@ module.exports = {
       chunkFilename: "[id].css",
     }),
   ],
-  mode: "production",
+  mode: "development",
   watch: true,
 };

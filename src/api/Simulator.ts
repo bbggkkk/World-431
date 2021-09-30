@@ -87,15 +87,17 @@ export class Simulator extends Grid {
         return value;
     }
 
-    getUpdateTarget():Array<string>{
-        return Array.from(new Set(Object.keys(this.prevTrueMap).reduce((acc:Array<string>,item:string) => {
+    getUpdateTarget(list:Array<string>):Array<string>{
+        console.log(this);
+        return Array.from(new Set(list.reduce((acc:Array<string>,item:string) => {
             const arr:Array<string> = this.getNeighbor(item);
             return acc.concat(arr);
-        },[]).concat(Object.keys(this.prevTrueMap)) ));
+        },[]).concat(list) ));
     }
 
-    update():Simulator{
-        const updateTarget:Array<string> = this.getUpdateTarget();
+    update(){
+        const updateTarget:Array<string> = this.worker.$run('getUpdateTarget',Object.keys(this.prevTrueMap));
+        // const updateTarget:Array<string> = this.getUpdateTarget();
         // console.log(this.prevMap);
         this.setMapList(updateTarget, (item:string) => {
             const cnt = this.cntIsLife(item);

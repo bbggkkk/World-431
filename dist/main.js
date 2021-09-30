@@ -1,1 +1,186 @@
-(()=>{"use strict";const t={worldSize:[12,12],tickTime:1e3,backgroundColor:"#fff",unitColor:"rgba(222,80,50,1)"};var e,r=function(){function e(e){this.wrapper=e,this.children=this.wrapper.querySelectorAll(":scope > div");var r=t.worldSize,n=r[0],o=r[1];this.wrapper.style.gridTemplate="repeat("+n+","+100/n+"%)/repeat("+o+","+100/o+"%)"}return e.prototype.render=function(t){var e=this,r=t.map,n=t.prevMap;Object.keys(n).forEach((function(t){var o=e.wrapper.querySelector('[data-idx="'+t+'"]');n[t],o.style.backgroundColor=r[t].color}))},e.prototype.start=function(){this.wrapper.classList.add("start")},e.prototype.stop=function(){this.wrapper.classList.remove("start")},e}(),n=t.backgroundColor,o=t.unitColor,i=function(){function t(t,e,r){this.x=e,this.y=r,this.life=t}return Object.defineProperty(t.prototype,"life",{get:function(){return this.isLife},set:function(t){this.isLife=t,this.color=t?o:n},enumerable:!1,configurable:!0}),t}(),a=function(){function t(t,e){var r=t.worldSize,n=r[0],o=r[1];this.x=n,this.y=o,this.map=e,this.prevMap={},this.setMapList(Object.keys(this.map)),this.lifeCount=this.cntLifeDot()}return t.prototype.cntLifeDot=function(){return Object.keys(this.prevTrueMap).length},t.prototype.on=function(t){var e=this;return this.setMapList(t,(function(t){e.map[t].life=!0})),this},t.prototype.off=function(t){var e=this;return this.setMapList(t,(function(t){e.map[t].life=!1})),this},t.prototype.toggle=function(t){var e=this;return this.setMapList(t,(function(t){e.map[t].life=!e.map[t].life})),this},t.prototype.setMapList=function(t,e){var r="string"==typeof t?[t]:t;e&&r.forEach((function(t){e(t)})),this.setPrevMap(r)},t.prototype.setPrevMap=function(t){var e=this;t.forEach((function(t){e.prevMap[t]=e.map[t].life})),this.prevTrueMap=Object.keys(this.prevMap).filter((function(t){return e.map[t].life})).reduce((function(t,r){return t[r]=e.map[r],t}),{}),this.lifeCount=this.cntLifeDot()},t}(),s=function(){function t(t,e){var r=this;this.$isUsing=!1,this.$worker={},Object.keys(t).forEach((function(e){r[e]=t[e],r.$worker[e]=function(t){if(Blob&&URL&&URL.createObjectURL){var e,r=new Blob(["onmessage = ({data}) => {\n            postMessage(("+t+")(data));\n        }"],{type:"text/javascript"}),n=URL.createObjectURL(r),o=new Worker(n);return o.onmessage=function(t){var r=t.data;e(r)},function(t){return new Promise((function(r,n){e=r,o.postMessage(t)}))}}return function(e){return t(e)}}(t[e])})),Object.keys(e).forEach((function(t){r[t]=e[t]}))}return t.prototype.$logThis=function(){console.log(this)},t}(),c=function(){function t(t,e){this.$thread=navigator.hardwareConcurrency?navigator.hardwareConcurrency:1,this.$fns=t,this.$prop=e,this.$worker=[];for(var r=0;r<this.$thread;r++)this.$worker.push(new s(t,e))}return t.prototype.$test=function(){this.$worker.forEach((function(t){t.$logThis()}))},t.prototype.$run=function(t,e){this.$divArray(e),this.$worker.forEach((function(t){}))},t.prototype.$divArray=function(t){for(var e=this.$thread,r=Math.floor(t.length/e),n=t.length%e,o=[],i=0,a=0;a<this.$thread;a++){var s=r;a<n&&s++,o.push(t.slice(i,i+s)),i+=s}return o},t}(),p=(e=function(t,r){return e=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var r in e)Object.prototype.hasOwnProperty.call(e,r)&&(t[r]=e[r])},e(t,r)},function(t,r){if("function"!=typeof r&&null!==r)throw new TypeError("Class extends value "+String(r)+" is not a constructor or null");function n(){this.constructor=t}e(t,r),t.prototype=null===r?Object.create(r):(n.prototype=r.prototype,new n)}),u=function(t){function e(e,r){var n=t.call(this,e,r)||this;return n.tick=e.tickTime,n.worker=new c({start:n.start,stop:n.stop,cntIsLife:n.cntIsLife,getNeighbor:n.getNeighbor,getUpdateTarget:n.getUpdateTarget,update:n.update,cntLifeDot:n.cntLifeDot,on:n.on,off:n.off,toggle:n.toggle,setMapList:n.setMapList,setPrevMap:n.setPrevMap},{x:n.x,y:n.y,map:n.map,prevMap:n.prevMap,prevTrueMap:n.prevTrueMap,lifeCount:n.lifeCount,interval:n.interval,renderer:n.renderer,tick:n.tick}),n.thread=n.worker.$thread,n}return p(e,t),e.prototype.start=function(t){var e=this;void 0===this.interval&&(this.renderer=t,this.renderer.start(),this.interval=setInterval((function(){console.time("interval"),e.update(),console.timeEnd("interval")}),this.tick))},e.prototype.stop=function(){clearInterval(this.interval),this.renderer.stop(),this.interval=void 0},e.prototype.cntIsLife=function(t){var e=this,r=0;return this.getNeighbor(t).forEach((function(t){e.prevMap[t]&&r++})),r},e.prototype.getNeighbor=function(t){var e=this,r=t.split("-").map((function(t){return+t})),n=r[0],o=r[1],i=function(t,r){return t*e.y+r};return[this.map[n-1+"-"+(o-1)+"-"+i(n-1,o-1)]?n-1+"-"+(o-1)+"-"+i(n-1,o-1):"",this.map[n-1+"-"+o+"-"+i(n-1,o)]?n-1+"-"+o+"-"+i(n-1,o):"",this.map[n-1+"-"+(o+1)+"-"+i(n-1,o+1)]?n-1+"-"+(o+1)+"-"+i(n-1,o+1):"",this.map[n+"-"+(o-1)+"-"+i(n,o-1)]?n+"-"+(o-1)+"-"+i(n,o-1):"",this.map[n+"-"+(o+1)+"-"+i(n,o+1)]?n+"-"+(o+1)+"-"+i(n,o+1):"",this.map[n+1+"-"+(o-1)+"-"+i(n+1,o-1)]?n+1+"-"+(o-1)+"-"+i(n+1,o-1):"",this.map[n+1+"-"+o+"-"+i(n+1,o)]?n+1+"-"+o+"-"+i(n+1,o):"",this.map[n+1+"-"+(o+1)+"-"+i(n+1,o+1)]?n+1+"-"+(o+1)+"-"+i(n+1,o+1):""].filter((function(t){return""!==t}))},e.prototype.getUpdateTarget=function(){var t=this;return Array.from(new Set(Object.keys(this.prevTrueMap).reduce((function(e,r){var n=t.getNeighbor(r);return e.concat(n)}),[]).concat(Object.keys(this.prevTrueMap))))},e.prototype.update=function(){var t=this,e=this.getUpdateTarget();return this.setMapList(e,(function(e){switch(t.cntIsLife(e)){case 2:!0===t.map[e].life?t.map[e].life=!0:t.map[e].life=!1;break;case 3:t.map[e].life=!0;break;default:t.map[e].life=!1}})),this},e}(a),f=t.worldSize,h=f[0],l=f[1],v=h*l;const y=function(t){var e=0,r=new Array(v).fill(1).reduce((function(t,r,n){var o=Math.floor(n/h),a=n%l,s=Math.round(10*Math.random())%2==0&&e<120;return s&&e++,t[o+"-"+a+"-"+n]=new i(s,o,a),t}),{});return new u(t,r)};!function(){var e,n,o,i;e=this,n=void 0,i=function(){var e,n;return function(t,e){var r,n,o,i,a={label:0,sent:function(){if(1&o[0])throw o[1];return o[1]},trys:[],ops:[]};return i={next:s(0),throw:s(1),return:s(2)},"function"==typeof Symbol&&(i[Symbol.iterator]=function(){return this}),i;function s(i){return function(s){return function(i){if(r)throw new TypeError("Generator is already executing.");for(;a;)try{if(r=1,n&&(o=2&i[0]?n.return:i[0]?n.throw||((o=n.return)&&o.call(n),0):n.next)&&!(o=o.call(n,i[1])).done)return o;switch(n=0,o&&(i=[2&i[0],o.value]),i[0]){case 0:case 1:o=i;break;case 4:return a.label++,{value:i[1],done:!1};case 5:a.label++,n=i[1],i=[0];continue;case 7:i=a.ops.pop(),a.trys.pop();continue;default:if(!((o=(o=a.trys).length>0&&o[o.length-1])||6!==i[0]&&2!==i[0])){a=0;continue}if(3===i[0]&&(!o||i[1]>o[0]&&i[1]<o[3])){a.label=i[1];break}if(6===i[0]&&a.label<o[1]){a.label=o[1],o=i;break}if(o&&a.label<o[2]){a.label=o[2],a.ops.push(i);break}o[2]&&a.ops.pop(),a.trys.pop();continue}i=e.call(t,a)}catch(t){i=[6,t],n=0}finally{r=o=0}if(5&i[0])throw i[1];return{value:i[0]?i[1]:void 0,done:!0}}([i,s])}}}(this,(function(o){return(e=t.worldSize)[0],e[1],n=document.querySelector("#wrapper"),window.world=y(t),window.demo=new r(n),[2]}))},new((o=void 0)||(o=Promise))((function(t,r){function a(t){try{c(i.next(t))}catch(t){r(t)}}function s(t){try{c(i.throw(t))}catch(t){r(t)}}function c(e){var r;e.done?t(e.value):(r=e.value,r instanceof o?r:new o((function(t){t(r)}))).then(a,s)}c((i=i.apply(e,n||[])).next())}))}()})();
+/*
+ * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./src/style/style.scss":
+/*!******************************!*\
+  !*** ./src/style/style.scss ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://world-431/./src/style/style.scss?");
+
+/***/ }),
+
+/***/ "./src/api/Demo.ts":
+/*!*************************!*\
+  !*** ./src/api/Demo.ts ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Demo\": () => (/* binding */ Demo)\n/* harmony export */ });\n/* harmony import */ var _src_setting__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @src/setting */ \"./src/setting.ts\");\n\nvar Demo = /** @class */ (function () {\n    function Demo(wrapper) {\n        this.wrapper = wrapper;\n        this.children = this.wrapper.querySelectorAll(':scope > div');\n        var _a = _src_setting__WEBPACK_IMPORTED_MODULE_0__[\"default\"].worldSize, x = _a[0], y = _a[1];\n        this.wrapper.style.gridTemplate = \"repeat(\" + x + \",\" + 100 / x + \"%)/repeat(\" + y + \",\" + 100 / y + \"%)\";\n    }\n    Demo.prototype.render = function (sim) {\n        var _this = this;\n        var mp = sim.map;\n        var wd = sim.prevMap;\n        Object.keys(wd).forEach(function (item) {\n            var ele = _this.wrapper.querySelector(\"[data-idx=\\\"\" + item + \"\\\"]\");\n            if (wd[item]) {\n                ele.style.backgroundColor = mp[item].color;\n            }\n            else {\n                ele.style.backgroundColor = mp[item].color;\n            }\n        });\n    };\n    Demo.prototype.start = function () {\n        this.wrapper.classList.add('start');\n        // this.children.forEach((item:Node) => (item as HTMLElement).style.border = '1px solid #ccc')\n    };\n    Demo.prototype.stop = function () {\n        this.wrapper.classList.remove('start');\n        // this.children.forEach((item:Node) => (item as HTMLElement).style.border = 'none')\n    };\n    return Demo;\n}());\n\n\n\n//# sourceURL=webpack://world-431/./src/api/Demo.ts?");
+
+/***/ }),
+
+/***/ "./src/api/Dot.ts":
+/*!************************!*\
+  !*** ./src/api/Dot.ts ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Dot\": () => (/* binding */ Dot)\n/* harmony export */ });\n/* harmony import */ var _src_setting__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @src/setting */ \"./src/setting.ts\");\n\nvar backgroundColor = _src_setting__WEBPACK_IMPORTED_MODULE_0__[\"default\"].backgroundColor, unitColor = _src_setting__WEBPACK_IMPORTED_MODULE_0__[\"default\"].unitColor;\nvar Dot = /** @class */ (function () {\n    function Dot(isLife, x, y) {\n        this.x = x;\n        this.y = y;\n        this.life = isLife;\n    }\n    Object.defineProperty(Dot.prototype, \"life\", {\n        get: function () {\n            return this.isLife;\n        },\n        set: function (val) {\n            this.isLife = val;\n            if (val) {\n                this.color = unitColor;\n            }\n            else {\n                this.color = backgroundColor;\n            }\n        },\n        enumerable: false,\n        configurable: true\n    });\n    return Dot;\n}());\n\n\n\n//# sourceURL=webpack://world-431/./src/api/Dot.ts?");
+
+/***/ }),
+
+/***/ "./src/api/Grid.ts":
+/*!*************************!*\
+  !*** ./src/api/Grid.ts ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Grid\": () => (/* binding */ Grid)\n/* harmony export */ });\nvar Grid = /** @class */ (function () {\n    function Grid(setting, map) {\n        var _a = setting.worldSize, x = _a[0], y = _a[1];\n        this.x = x;\n        this.y = y;\n        this.map = map;\n        this.prevMap = {};\n        this.setMapList(Object.keys(this.map));\n        this.lifeCount = this.cntLifeDot();\n        // this.defineEvent();\n    }\n    // defineEvent() {\n    //     Object.keys(this.map).forEach((item:string) => {\n    //         console.log(this.map,item,this.map[item]);\n    //         const key:string = item;\n    //         this.map[item].addEventListener('click',this.onoff)\n    //     });\n    // }\n    // onoff(){\n    //     console.log(this);\n    // }\n    Grid.prototype.cntLifeDot = function () {\n        return Object.keys(this.prevTrueMap).length;\n    };\n    Grid.prototype.on = function (target) {\n        var _this = this;\n        this.setMapList(target, function (item) {\n            _this.map[item].life = true;\n        });\n        return this;\n    };\n    Grid.prototype.off = function (target) {\n        var _this = this;\n        this.setMapList(target, function (item) {\n            _this.map[item].life = false;\n        });\n        return this;\n    };\n    Grid.prototype.toggle = function (target) {\n        var _this = this;\n        this.setMapList(target, function (item) {\n            _this.map[item].life = !_this.map[item].life;\n        });\n        return this;\n    };\n    Grid.prototype.setMapList = function (target, cbk) {\n        var key = typeof target === 'string' ? [target] : target;\n        if (cbk) {\n            key.forEach(function (item) {\n                cbk(item);\n            });\n        }\n        // console.log(key);\n        //렌더링\n        this.setPrevMap(key);\n    };\n    Grid.prototype.setPrevMap = function (key) {\n        var _this = this;\n        key.forEach(function (item) {\n            _this.prevMap[item] = _this.map[item].life;\n        });\n        this.prevTrueMap = Object.keys(this.prevMap).filter(function (item) { return _this.map[item].life; }).reduce(function (acc, item) {\n            acc[item] = _this.map[item];\n            return acc;\n        }, {});\n        // console.log(this.prevMap);\n        // this.prevTrueMap = {};\n        // key.forEach(item => {\n        //     this.prevMap[item] = this.map[item].life;\n        //     if(this.map[item].life){\n        //         this.prevTrueMap[item] = true;\n        //     }\n        // });\n        this.lifeCount = this.cntLifeDot();\n    };\n    return Grid;\n}());\n\n\n\n//# sourceURL=webpack://world-431/./src/api/Grid.ts?");
+
+/***/ }),
+
+/***/ "./src/api/Simulator.ts":
+/*!******************************!*\
+  !*** ./src/api/Simulator.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Simulator\": () => (/* binding */ Simulator)\n/* harmony export */ });\n/* harmony import */ var _Grid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Grid */ \"./src/api/Grid.ts\");\n/* harmony import */ var _worker_Main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./worker/Main */ \"./src/api/worker/Main.ts\");\nvar __extends = (undefined && undefined.__extends) || (function () {\n    var extendStatics = function (d, b) {\n        extendStatics = Object.setPrototypeOf ||\n            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||\n            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };\n        return extendStatics(d, b);\n    };\n    return function (d, b) {\n        if (typeof b !== \"function\" && b !== null)\n            throw new TypeError(\"Class extends value \" + String(b) + \" is not a constructor or null\");\n        extendStatics(d, b);\n        function __() { this.constructor = d; }\n        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());\n    };\n})();\n\n\nvar Simulator = /** @class */ (function (_super) {\n    __extends(Simulator, _super);\n    function Simulator(setting, map) {\n        var _this = _super.call(this, setting, map) || this;\n        _this.tick = setting.tickTime;\n        _this.worker = new _worker_Main__WEBPACK_IMPORTED_MODULE_1__.MainTread({\n            start: _this.start,\n            stop: _this.stop,\n            cntIsLife: _this.cntIsLife,\n            getNeighbor: _this.getNeighbor,\n            getUpdateTarget: _this.getUpdateTarget,\n            update: _this.update,\n            cntLifeDot: _this.cntLifeDot,\n            on: _this.on,\n            off: _this.off,\n            toggle: _this.toggle,\n            setMapList: _this.setMapList,\n            setPrevMap: _this.setPrevMap,\n        }, {\n            x: _this.x,\n            y: _this.y,\n            map: _this.map,\n            prevMap: _this.prevMap,\n            prevTrueMap: _this.prevTrueMap,\n            lifeCount: _this.lifeCount,\n            interval: _this.interval,\n            renderer: _this.renderer,\n            tick: _this.tick,\n        });\n        _this.thread = _this.worker.$thread;\n        return _this;\n    }\n    Simulator.prototype.start = function (demo) {\n        var _this = this;\n        if (this.interval !== undefined)\n            return;\n        this.renderer = demo;\n        this.renderer.start();\n        this.interval = setInterval(function () {\n            console.time('interval');\n            _this.update();\n            // this.renderer.render(this); \n            console.timeEnd('interval');\n        }, this.tick);\n    };\n    Simulator.prototype.stop = function () {\n        clearInterval(this.interval);\n        this.renderer.stop();\n        this.interval = undefined;\n    };\n    Simulator.prototype.cntIsLife = function (position) {\n        var _this = this;\n        var cnt = 0;\n        var neighbor = this.getNeighbor(position);\n        // console.log('neighbor ::',neighbor);\n        neighbor.forEach(function (item) {\n            if (_this.prevMap[item])\n                cnt++;\n        });\n        return cnt;\n    };\n    Simulator.prototype.getNeighbor = function (position) {\n        var _this = this;\n        var _a = position.split('-').map(function (item) { return +item; }), y = _a[0], x = _a[1];\n        var index = function (y, x) {\n            return (y * _this.y) + x;\n        };\n        var value = [\n            this.map[y - 1 + \"-\" + (x - 1) + \"-\" + index(y - 1, x - 1)] ? y - 1 + \"-\" + (x - 1) + \"-\" + index(y - 1, x - 1) : '',\n            this.map[y - 1 + \"-\" + x + \"-\" + index(y - 1, x)] ? y - 1 + \"-\" + x + \"-\" + index(y - 1, x) : '',\n            this.map[y - 1 + \"-\" + (x + 1) + \"-\" + index(y - 1, x + 1)] ? y - 1 + \"-\" + (x + 1) + \"-\" + index(y - 1, x + 1) : '',\n            this.map[y + \"-\" + (x - 1) + \"-\" + index(y, x - 1)] ? y + \"-\" + (x - 1) + \"-\" + index(y, x - 1) : '',\n            this.map[y + \"-\" + (x + 1) + \"-\" + index(y, x + 1)] ? y + \"-\" + (x + 1) + \"-\" + index(y, x + 1) : '',\n            this.map[y + 1 + \"-\" + (x - 1) + \"-\" + index(y + 1, x - 1)] ? y + 1 + \"-\" + (x - 1) + \"-\" + index(y + 1, x - 1) : '',\n            this.map[y + 1 + \"-\" + x + \"-\" + index(y + 1, x)] ? y + 1 + \"-\" + x + \"-\" + index(y + 1, x) : '',\n            this.map[y + 1 + \"-\" + (x + 1) + \"-\" + index(y + 1, x + 1)] ? y + 1 + \"-\" + (x + 1) + \"-\" + index(y + 1, x + 1) : ''\n        ].filter(function (item) { return item !== ''; });\n        return value;\n    };\n    Simulator.prototype.getUpdateTarget = function (list) {\n        var _this = this;\n        console.log(this);\n        return Array.from(new Set(list.reduce(function (acc, item) {\n            var arr = _this.getNeighbor(item);\n            return acc.concat(arr);\n        }, []).concat(list)));\n    };\n    Simulator.prototype.update = function () {\n        var _this = this;\n        var updateTarget = this.worker.$run('getUpdateTarget', Object.keys(this.prevTrueMap));\n        // const updateTarget:Array<string> = this.getUpdateTarget();\n        // console.log(this.prevMap);\n        this.setMapList(updateTarget, function (item) {\n            var cnt = _this.cntIsLife(item);\n            switch (cnt) {\n                case 2:\n                    if (_this.map[item].life === true) {\n                        // console.log(item, cnt, this.map[item].life, 'true');\n                        _this.map[item].life = true;\n                    }\n                    else {\n                        // console.log(item, cnt, this.map[item].life, 'false');\n                        _this.map[item].life = false;\n                    }\n                    break;\n                case 3:\n                    // console.log(item, cnt, this.map[item].life, 'true');\n                    _this.map[item].life = true;\n                    break;\n                default:\n                    // console.log(item, cnt, this.map[item].life, 'false');\n                    _this.map[item].life = false;\n            }\n        });\n        return this;\n    };\n    return Simulator;\n}(_Grid__WEBPACK_IMPORTED_MODULE_0__.Grid));\n\n\n\n//# sourceURL=webpack://world-431/./src/api/Simulator.ts?");
+
+/***/ }),
+
+/***/ "./src/api/worker/Child.ts":
+/*!*********************************!*\
+  !*** ./src/api/worker/Child.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"ChildThread\": () => (/* binding */ ChildThread)\n/* harmony export */ });\n/* harmony import */ var _Worker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Worker */ \"./src/api/worker/Worker.ts\");\n\nvar ChildThread = /** @class */ (function () {\n    function ChildThread(fns, prop) {\n        var _this = this;\n        this.$isUsing = false;\n        this.$worker = {};\n        this.cw = _Worker__WEBPACK_IMPORTED_MODULE_0__.createWorker.bind(this);\n        Object.keys(fns).forEach(function (item) {\n            _this[item] = _this.cw(fns[item]);\n        });\n        Object.keys(prop).forEach(function (item) {\n            _this[item] = prop[item];\n        });\n        console.log(this);\n    }\n    ChildThread.prototype.$logThis = function () {\n        console.log(this);\n    };\n    return ChildThread;\n}());\n\n\n\n//# sourceURL=webpack://world-431/./src/api/worker/Child.ts?");
+
+/***/ }),
+
+/***/ "./src/api/worker/Main.ts":
+/*!********************************!*\
+  !*** ./src/api/worker/Main.ts ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"MainTread\": () => (/* binding */ MainTread)\n/* harmony export */ });\n/* harmony import */ var _Child__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Child */ \"./src/api/worker/Child.ts\");\n\nvar MainTread = /** @class */ (function () {\n    function MainTread(fns, prop) {\n        this.$thread = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 1;\n        this.$fns = fns;\n        this.$prop = prop;\n        this.$worker = [];\n        for (var i = 0; i < this.$thread; i++) {\n            this.$worker.push(new _Child__WEBPACK_IMPORTED_MODULE_0__.ChildThread(fns, prop));\n        }\n    }\n    MainTread.prototype.$test = function () {\n        this.$worker.forEach(function (item) {\n            item.$logThis();\n        });\n    };\n    MainTread.prototype.$run = function (fn, list) {\n        var _this = this;\n        var workList = this.$divArray(list);\n        workList.forEach(function (item, idx) {\n            _this.$worker[idx][fn].call(_this.$worker[idx], item);\n        });\n        return ['1'];\n    };\n    MainTread.prototype.$divArray = function (list) {\n        // const $list = \n        var cnt = this.$thread;\n        var divLng = Math.floor(list.length / cnt);\n        var am = list.length % cnt;\n        var arr = [];\n        var idx = 0;\n        for (var i = 0; i < this.$thread; i++) {\n            var num = divLng;\n            if (i < am)\n                num++;\n            arr.push(list.slice(idx, idx + num));\n            idx += num;\n        }\n        return arr.filter(function (item) { return item.length; });\n    };\n    return MainTread;\n}());\n\n// const threadCount = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4;\n// const wl          = [];\n// for(let i=0; i<threadCount; i++){\n//     const worker = new Worker( new URL('./Child.ts', import.meta.url) );\n//     wl.push(worker);\n// }\n// console.log(wl);\n// onmessage = (e) => {\n//     console.log(e);\n// }\n\n\n//# sourceURL=webpack://world-431/./src/api/worker/Main.ts?");
+
+/***/ }),
+
+/***/ "./src/api/worker/Worker.ts":
+/*!**********************************!*\
+  !*** ./src/api/worker/Worker.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"createWorker\": () => (/* binding */ createWorker)\n/* harmony export */ });\nvar _this = undefined;\nvar createWorker = function (fn) {\n    console.log(_this);\n    var isWorker = (Blob && URL && URL.createObjectURL) ? true : false;\n    if (isWorker) {\n        var blob = new Blob([\"onmessage = ({data}) => {\\n            postMessage((\" + fn + \")(data));\\n        }\"], { type: 'text/javascript' });\n        var url = URL.createObjectURL(blob);\n        var worker_1 = new Worker(url);\n        var resolve_1, reject_1;\n        worker_1.onmessage = function (_a) {\n            var data = _a.data;\n            resolve_1(data);\n        };\n        // worker.onerror = ({data}) => {\n        //     reject(data);\n        // }\n        return function (data) { return new Promise(function (res, rej) {\n            resolve_1 = res;\n            reject_1 = rej;\n            worker_1.postMessage(data);\n        }); };\n    }\n    else {\n        return function (data) { return fn(data); };\n    }\n};\n\n\n//# sourceURL=webpack://world-431/./src/api/worker/Worker.ts?");
+
+/***/ }),
+
+/***/ "./src/init.ts":
+/*!*********************!*\
+  !*** ./src/init.ts ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _api_Dot__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./api/Dot */ \"./src/api/Dot.ts\");\n/* harmony import */ var _src_setting__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @src/setting */ \"./src/setting.ts\");\n/* harmony import */ var _api_Simulator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./api/Simulator */ \"./src/api/Simulator.ts\");\n\n\n\nvar _a = _src_setting__WEBPACK_IMPORTED_MODULE_1__[\"default\"].worldSize, x = _a[0], y = _a[1];\nvar size = x * y;\n/**\n * @description 초기 설정 함수\n * @param {Object} setting - ./src/setting.ts 에 정의된 설정값\n * @param {Array<number>} worldSize - 월드의 크기\n * @param {number} tickTime - 월드 갱신 주기 (ms)\n */\nvar init = function (setting) {\n    var cnt = 0;\n    var list = new Array(size).fill(1).reduce(function (acc, item, idx) {\n        var $x = Math.floor(idx / x);\n        var $y = idx % y;\n        var tf = Math.round(Math.random() * 10) % 2 === 0 && cnt < 120 ? true : false;\n        // const tf = Math.round(Math.random()*10)%2 === 0 ? true : false;\n        // const tf = cnt < 20 ? true : false;\n        // const tf = false;\n        // const tf = idx < 3 ? true : false;\n        if (tf)\n            cnt++;\n        acc[$x + \"-\" + $y + \"-\" + idx] = new _api_Dot__WEBPACK_IMPORTED_MODULE_0__.Dot(tf, $x, $y);\n        return acc;\n    }, {});\n    var grid = new _api_Simulator__WEBPACK_IMPORTED_MODULE_2__.Simulator(setting, list);\n    return grid;\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (init);\n\n\n//# sourceURL=webpack://world-431/./src/init.ts?");
+
+/***/ }),
+
+/***/ "./src/main.ts":
+/*!*********************!*\
+  !*** ./src/main.ts ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _api_Demo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./api/Demo */ \"./src/api/Demo.ts\");\n/* harmony import */ var _init__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./init */ \"./src/init.ts\");\n/* harmony import */ var _setting__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./setting */ \"./src/setting.ts\");\n/* harmony import */ var _style_style_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style/style.scss */ \"./src/style/style.scss\");\nvar __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\n    return new (P || (P = Promise))(function (resolve, reject) {\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\n    });\n};\nvar __generator = (undefined && undefined.__generator) || function (thisArg, body) {\n    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;\n    return g = { next: verb(0), \"throw\": verb(1), \"return\": verb(2) }, typeof Symbol === \"function\" && (g[Symbol.iterator] = function() { return this; }), g;\n    function verb(n) { return function (v) { return step([n, v]); }; }\n    function step(op) {\n        if (f) throw new TypeError(\"Generator is already executing.\");\n        while (_) try {\n            if (f = 1, y && (t = op[0] & 2 ? y[\"return\"] : op[0] ? y[\"throw\"] || ((t = y[\"return\"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;\n            if (y = 0, t) op = [op[0] & 2, t.value];\n            switch (op[0]) {\n                case 0: case 1: t = op; break;\n                case 4: _.label++; return { value: op[1], done: false };\n                case 5: _.label++; y = op[1]; op = [0]; continue;\n                case 7: op = _.ops.pop(); _.trys.pop(); continue;\n                default:\n                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }\n                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }\n                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }\n                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }\n                    if (t[2]) _.ops.pop();\n                    _.trys.pop(); continue;\n            }\n            op = body.call(thisArg, _);\n        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }\n        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };\n    }\n};\n\n\n\n\n(function () {\n    return __awaiter(this, void 0, void 0, function () {\n        var _a, x, y, size, wrap;\n        return __generator(this, function (_b) {\n            _a = _setting__WEBPACK_IMPORTED_MODULE_2__[\"default\"].worldSize, x = _a[0], y = _a[1];\n            size = x * y;\n            wrap = document.querySelector('#wrapper');\n            window.world = (0,_init__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(_setting__WEBPACK_IMPORTED_MODULE_2__[\"default\"]);\n            window.demo = new _api_Demo__WEBPACK_IMPORTED_MODULE_0__.Demo(wrap);\n            return [2 /*return*/];\n        });\n    });\n})();\n\n\n//# sourceURL=webpack://world-431/./src/main.ts?");
+
+/***/ }),
+
+/***/ "./src/setting.ts":
+/*!************************!*\
+  !*** ./src/setting.ts ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nvar setting = {\n    worldSize: [12, 12],\n    tickTime: 1000,\n    backgroundColor: '#fff',\n    unitColor: 'rgba(222,80,50,1)'\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (setting);\n\n\n//# sourceURL=webpack://world-431/./src/setting.ts?");
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/main.ts");
+/******/ 	
+/******/ })()
+;

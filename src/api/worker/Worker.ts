@@ -1,4 +1,5 @@
 export const createWorker = (fn:Function) => {
+    console.log(this);
     const isWorker:boolean = (Blob && URL && URL.createObjectURL) ? true : false;
     if(isWorker){
         const blob = new Blob([`onmessage = ({data}) => {

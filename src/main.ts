@@ -33,7 +33,6 @@ import './style/style.scss';
 
     //////////////////////////////////////
     // const test = (data:any) => {
-    //     // console.log(data);
     //     return data+2;
     // }
 

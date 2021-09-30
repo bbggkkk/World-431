@@ -9,14 +9,15 @@ export class ChildThread {
     constructor(fns:any,prop:any){
         this.$isUsing = false;
         this.$worker  = {};
+        this.cw       = createWorker.bind(this);
         
         Object.keys(fns).forEach(item => {
-            this[item] = fns[item];
-            this.$worker[item] = createWorker(fns[item]);
+            this[item] = this.cw(fns[item]);
         });
         Object.keys(prop).forEach(item => {
             this[item] = prop[item];
         });
+        console.log(this);
     }
 
     $logThis(){

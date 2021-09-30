@@ -24,14 +24,17 @@ export class MainTread {
         })
     }
 
-    $run(fn:Function,list:Array<any>){
+    $run(fn:string,list:any){
         const workList = this.$divArray(list);
-        this.$worker.forEach(item => {
-            // item[fn](list);
-        })
+        workList.forEach((item,idx) => {
+            this.$worker[idx][fn].call(this.$worker[idx],item);
+        });
+        return ['1'];
     }
 
-    $divArray(list:Array<any>){
+    $divArray(list:any){
+        // const $list = 
+
         const cnt = this.$thread;
         const divLng = Math.floor(list.length/cnt);
         const am = list.length%cnt;
@@ -44,8 +47,15 @@ export class MainTread {
             arr.push(list.slice(idx,idx+num));
             idx += num;
         }
-        return arr;
+        return arr.filter(item => item.length);
     }
+    // $isArray(target:any){
+    //     if(Array.isArray(target)){
+    //         return target;
+    //     }else{
+    //         return Object.keys()
+    //     }
+    // }
 }
 
 // const threadCount = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4;
