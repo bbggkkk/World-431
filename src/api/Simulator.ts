@@ -13,33 +13,33 @@ export class Simulator extends Grid {
         super(setting, map);
         this.tick = setting.tickTime;
 
-        this.worker = new MainTread({
-            start : this.start,
-            stop  : this.stop,
-            cntIsLife : this.cntIsLife,
-            getNeighbor : this.getNeighbor,
-            getUpdateTarget : this.getUpdateTarget,
-            update : this.update,
-            cntLifeDot : this.cntLifeDot,
-            on : this.on,
-            off : this.off,
-            toggle : this.toggle,
-            setMapList : this.setMapList,
-            setPrevMap : this.setPrevMap,
-        },{
-            x : this.x,
-            y : this.y,
-            map : this.map,
-            prevMap : this.prevMap,
-            prevTrueMap : this.prevTrueMap,
-            lifeCount : this.lifeCount,
+        // this.worker = new MainTread({
+        //     start : this.start,
+        //     stop  : this.stop,
+        //     cntIsLife : this.cntIsLife,
+        //     getNeighbor : this.getNeighbor,
+        //     getUpdateTarget : this.getUpdateTarget,
+        //     update : this.update,
+        //     cntLifeDot : this.cntLifeDot,
+        //     on : this.on,
+        //     off : this.off,
+        //     toggle : this.toggle,
+        //     setMapList : this.setMapList,
+        //     setPrevMap : this.setPrevMap,
+        // },{
+        //     x : this.x,
+        //     y : this.y,
+        //     map : this.map,
+        //     prevMap : this.prevMap,
+        //     prevTrueMap : this.prevTrueMap,
+        //     lifeCount : this.lifeCount,
 
-            interval : this.interval,
-            renderer : this.renderer,
-            tick : this.tick,
-        });
+        //     interval : this.interval,
+        //     renderer : this.renderer,
+        //     tick : this.tick,
+        // });
 
-        this.thread = this.worker.$thread;
+        // this.thread = this.worker.$thread;
     }
 
     start(demo:Demo){
@@ -87,17 +87,16 @@ export class Simulator extends Grid {
         return value;
     }
 
-    getUpdateTarget(list:Array<string>):Array<string>{
-        console.log(this);
-        return Array.from(new Set(list.reduce((acc:Array<string>,item:string) => {
+    getUpdateTarget():Array<string>{
+        return Array.from(new Set( Object.keys(this.prevTrueMap).reduce((acc:Array<string>,item:string) => {
             const arr:Array<string> = this.getNeighbor(item);
             return acc.concat(arr);
-        },[]).concat(list) ));
+        },[]).concat( Object.keys(this.prevTrueMap) ) ));
     }
 
     update(){
-        const updateTarget:Array<string> = this.worker.$run('getUpdateTarget',Object.keys(this.prevTrueMap));
-        // const updateTarget:Array<string> = this.getUpdateTarget();
+        // const updateTarget:Array<string> = this.worker.$run('getUpdateTarget',Object.keys(this.prevTrueMap));
+        const updateTarget:Array<string> = this.getUpdateTarget();
         // console.log(this.prevMap);
         this.setMapList(updateTarget, (item:string) => {
             const cnt = this.cntIsLife(item);

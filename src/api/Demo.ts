@@ -14,7 +14,6 @@ export class Demo {
     render(sim:Simulator){
         const mp = sim.map;
         const wd = sim.prevMap;
-        
         Object.keys(wd).forEach(item => {
             const ele = this.wrapper.querySelector(`[data-idx="${item}"]`) as HTMLElement;
             if(wd[item]){

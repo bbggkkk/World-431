@@ -25,9 +25,9 @@ import './style/style.scss';
     //     wrap?.append(tmp);
     // }
 
-    // window.demo.render(window.world);
+    window.demo.render(window.world);
 
-    // window.world.start();
+    window.world.start();
 
 
 
