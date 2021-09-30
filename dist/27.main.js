@@ -1,0 +1,1 @@
+(()=>{"use strict";onmessage=function(o){console.log(o)}})();
