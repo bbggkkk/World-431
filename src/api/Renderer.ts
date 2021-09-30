@@ -21,7 +21,7 @@ export class Renderer {
         this.wrapper = wrapper;
         this.isObserving = false;
         this.world   = sim;
-        this.scale   = 2;
+        this.scale   = 4;
         this.prevMap = [];
         
         this.initCanvas();
