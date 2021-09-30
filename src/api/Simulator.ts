@@ -26,9 +26,20 @@ export class Simulator extends Grid {
             toggle : this.toggle,
             setMapList : this.setMapList,
             setPrevMap : this.setPrevMap,
+        },{
+            x : this.x,
+            y : this.y,
+            map : this.map,
+            prevMap : this.prevMap,
+            prevTrueMap : this.prevTrueMap,
+            lifeCount : this.lifeCount,
+
+            interval : this.interval,
+            renderer : this.renderer,
+            tick : this.tick,
         });
 
-        this.thread = this.worker.thread;
+        this.thread = this.worker.$thread;
     }
 
     start(demo:Demo){
