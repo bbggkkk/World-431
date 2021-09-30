@@ -16,25 +16,10 @@ export class Grid {
         this.prevMap = {};
         this.setMapList(Object.keys(this.map));
         this.lifeCount = this.cntLifeDot();
-
-        // this.defineEvent();
     }
 
-    // defineEvent() {
-    //     Object.keys(this.map).forEach((item:string) => {
-    //         console.log(this.map,item,this.map[item]);
-    //         const key:string = item;
-    //         this.map[item].addEventListener('click',this.onoff)
-    //     });
-    // }
-
-    // onoff(){
-    //     console.log(this);
-
-    // }
-
     cntLifeDot(){
-        return Object.keys(this.prevTrueMap).length;
+        return this.prevTrueMap.length;
     }
 
     on(target:string|Array<string>):Grid{
@@ -62,8 +47,6 @@ export class Grid {
                 cbk(item);
             });
         }
-        // console.log(key);
-        //렌더링
         this.setPrevMap(key);
     }
 
@@ -71,18 +54,7 @@ export class Grid {
         key.forEach(item => {
             this.prevMap[item] = this.map[item].life;
         });
-        this.prevTrueMap = Object.keys(this.prevMap).filter(item => this.map[item].life).reduce((acc:any, item:string) => {
-            acc[item] = this.map[item];
-            return acc;
-        }, {});
-        // console.log(this.prevMap);
-        // this.prevTrueMap = {};
-        // key.forEach(item => {
-        //     this.prevMap[item] = this.map[item].life;
-        //     if(this.map[item].life){
-        //         this.prevTrueMap[item] = true;
-        //     }
-        // });
+        this.prevTrueMap = Object.keys(this.prevMap).filter(item => this.map[item].life);
         this.lifeCount = this.cntLifeDot();
     }
 }

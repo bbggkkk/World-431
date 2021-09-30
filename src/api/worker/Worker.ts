@@ -12,9 +12,6 @@ export const createWorker = (fn:Function) => {
         worker.onmessage = ({data}) => {
             resolve(data);
         }
-        // worker.onerror = ({data}) => {
-        //     reject(data);
-        // }
 
         return (data:any) => new Promise((res, rej) => {
             resolve = res;

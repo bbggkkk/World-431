@@ -1,6 +1,4 @@
-import { Demo } from './api/Demo';
-
-import { createWorker } from './api/worker/Worker';
+import { Renderer } from './api/Renderer';
 
 import init from './init';
 import setting from './setting';
@@ -11,8 +9,11 @@ import './style/style.scss';
     const size = x*y;
     const wrap = document.querySelector('#wrapper');
     
-    window.world = init(setting);
-    window.demo  = new Demo(wrap as HTMLElement)
+    window.world    = init(setting);
+    window.renderer = new Renderer(wrap as HTMLElement, window.world);
+    // window.world.start(window.renderer);
+
+    // window.demo  = new Demo(wrap as HTMLElement)
 
     // for(let i=0; i<size; i++){
 
@@ -25,18 +26,9 @@ import './style/style.scss';
     //     wrap?.append(tmp);
     // }
 
-    window.demo.render(window.world);
+    // window.demo.render(window.world);
 
-    window.world.start();
+    // window.world.start();
 
-
-
-    //////////////////////////////////////
-    // const test = (data:any) => {
-    //     return data+2;
-    // }
-
-    // const worker = createWorker(test);
-    // worker(2).then((data:any)=> console.log(data) );
 
 })();

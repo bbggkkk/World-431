@@ -1,40 +1,20 @@
 import { createWorker } from './Worker';
 import { ChildThread }  from './Child';
+import { Simulator } from '../Simulator';
 
-export class MainTread {
+export class MainTread extends Simulator {
     $worker:Array<ChildThread>;
     $thread:number;
-    $fns:any;
-    $prop:any;
 
-    constructor(fns:any,prop:any){
+    [key: string]: any;
+
+    constructor(setting:Setting, map:any){
+        super(setting, map);
         this.$thread = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 1;
-        this.$fns    = fns;
-        this.$prop   = prop;
-        this.$worker = [];
-
-        for(let i=0; i<this.$thread; i++){
-            this.$worker.push( new ChildThread(fns, prop) );
-        }
     }
 
-    $test(){
-        this.$worker.forEach(item => {
-            item.$logThis();
-        })
-    }
 
-    $run(fn:string,list:any){
-        const workList = this.$divArray(list);
-        workList.forEach((item,idx) => {
-            this.$worker[idx][fn].call(this.$worker[idx],item);
-        });
-        return ['1'];
-    }
-
-    $divArray(list:any){
-        // const $list = 
-
+    $balancing(list:any){
         const cnt = this.$thread;
         const divLng = Math.floor(list.length/cnt);
         const am = list.length%cnt;
@@ -49,27 +29,5 @@ export class MainTread {
         }
         return arr.filter(item => item.length);
     }
-    // $isArray(target:any){
-    //     if(Array.isArray(target)){
-    //         return target;
-    //     }else{
-    //         return Object.keys()
-    //     }
-    // }
 }
-
-// const threadCount = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4;
-// const wl          = [];
-
-// for(let i=0; i<threadCount; i++){
-//     const worker = new Worker( new URL('./Child.ts', import.meta.url) );
-
-//     wl.push(worker);
-// }
-// console.log(wl);
-
-
-// onmessage = (e) => {
-//     console.log(e);
-// }
 
