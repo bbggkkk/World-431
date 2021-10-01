@@ -1,8 +1,8 @@
 import { Dot } from './api/Dot';
 
 import setting from '@src/setting';
-import { MainTread } from './api/worker/Main';
-// import { Simulator } from './api/Simulator';
+import { MainTread } from './api/worker/MainThread';
+import { Simulator } from './api/Simulator';
 
 const [ x, y ] = setting.worldSize;
 const size     = x * y;
@@ -27,7 +27,7 @@ const init = (setting:Setting) => {
         acc[`${$x}-${$y}-${idx}`] = new Dot(tf, $x, $y);
         return acc;
     },{});
-    const grid = new MainTread(setting, list);
+    const grid = new Simulator(setting, list);
     return grid;
     
 }

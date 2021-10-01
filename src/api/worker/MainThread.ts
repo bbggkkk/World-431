@@ -1,9 +1,8 @@
 import { createWorker } from './Worker';
-import { ChildThread }  from './Child';
 import { Simulator } from '../Simulator';
 
 export class MainTread extends Simulator {
-    $worker:Array<ChildThread>;
+    $worker:Array<Function>;
     $thread:number;
 
     [key: string]: any;
@@ -11,8 +10,16 @@ export class MainTread extends Simulator {
     constructor(setting:Setting, map:any){
         super(setting, map);
         this.$thread = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 1;
+        
+        for(let i=0; i<this.$thread; i++){
+            this.$worker.push(createWorker(this.test));
+        }
     }
 
+
+    test(list:Array<number>){
+
+    }
 
     $balancing(list:any){
         const cnt = this.$thread;

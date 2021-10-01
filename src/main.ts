@@ -1,4 +1,5 @@
 import { Renderer } from './api/Renderer';
+import { createWorker } from './api/worker/Worker';
 
 import init from './init';
 import setting from './setting';
@@ -9,9 +10,11 @@ import './style/style.scss';
     const size = x*y;
     const wrap = document.querySelector('#wrapper');
     
+
+
     window.world    = init(setting);
     window.renderer = new Renderer(wrap as HTMLElement, window.world);
-    // window.world.start(window.renderer);
+    window.world.start(window.renderer);
 
     // window.demo  = new Demo(wrap as HTMLElement)
 

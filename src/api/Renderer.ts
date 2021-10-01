@@ -1,5 +1,5 @@
 import { ContextExclusionPlugin } from "node_modules/webpack/types";
-import { MainTread } from "./worker/Main";
+import { MainTread } from "./worker/MainThread";
 
 export class Renderer {
     world:MainTread;
@@ -64,8 +64,9 @@ export class Renderer {
         this.ctx.fillRect(x*sz,y*sz,sz,sz);
     }
     erase(x:number, y:number){
+        const offset = 0.5;
         const sz = this.lifeSize;
-        this.ctx.clearRect(x*sz,y*sz,sz,sz);
+        this.ctx.clearRect(x*sz-offset,y*sz-offset,sz+(offset*2),sz+(offset*2));
     }
 
     setLifeSize(){
