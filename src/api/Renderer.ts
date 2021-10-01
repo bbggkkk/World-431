@@ -41,20 +41,21 @@ export class Renderer {
 
     render(map:Array<string>){
         const [ on, off ] = this.diff(this.prevMap, map);
+
+        on.forEach(item => {
+            const [y,x] = item.split('-');
+            this.draw(+x,+y);
+        });
+        off.forEach(item => {
+            const [y,x] = item.split('-');
+            this.erase(+x,+y);
+        });
+
         this.prevMap   = map; 
     }
     diff(a:Array<string>, b:Array<string>){
         const onList  = b.filter(item => !a.includes(item) );
         const offList = a.filter(item => !b.includes(item) );
-
-        onList.forEach(item => {
-            const [y,x] = item.split('-');
-            this.draw(+x,+y);
-        });
-        offList.forEach(item => {
-            const [y,x] = item.split('-');
-            this.erase(+x,+y);
-        });
 
         return [onList,offList];
     }
