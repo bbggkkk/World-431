@@ -14,6 +14,7 @@ export class Renderer {
     lifeWidth:number;
     lifeHeight:number;
     ctx:CanvasRenderingContext2D;
+    resizing:boolean;
 
     prevMap:Array<string>;
 
@@ -23,6 +24,7 @@ export class Renderer {
         this.world   = sim;
         this.scale   = 4;
         this.prevMap = [];
+        this.resizing = false;
         
         this.initCanvas();
         this.onResize();
@@ -33,14 +35,16 @@ export class Renderer {
         this.canvas  = document.createElement('canvas');
         this.canvas.style.width  = '100vmin';
         this.canvas.style.height = '100vmin';
+        this.canvas.style.imageRendering = 'pixelated'
         this.ctx     = this.canvas.getContext('2d')!;
         this.ctx.fillStyle = this.world.color;
         // this.setCanvasSize();
         this.wrapper.append(this.canvas);
     }
 
-    render(map:Array<string>){
-        const [ on, off ] = this.diff(this.prevMap, map);
+    render(map:Array<string>,reset:boolean = false){
+        if(this.resizing && !reset) return;
+        const [ on, off ] = this.diff(reset ? [] : this.prevMap, map);
 
         on.forEach(item => {
             const [y,x] = item.split('-');
@@ -65,21 +69,24 @@ export class Renderer {
         this.ctx.fillRect(x*sz,y*sz,sz,sz);
     }
     erase(x:number, y:number){
-        const offset = 0.5;
+        // const offset = 0.5;
         const sz = this.lifeSize;
-        this.ctx.clearRect(x*sz-offset,y*sz-offset,sz+(offset*2),sz+(offset*2));
+        this.ctx.clearRect(x*sz,y*sz,sz,sz);
     }
 
     setLifeSize(){
         const w = +window.getComputedStyle(this.wrapper).width.replace('px','');
-        this.lifeSize = +(w/this.world.x*this.scale*window.devicePixelRatio).toFixed(4);
+        this.lifeSize = 1;
     }
 
     onResize(){
         const target = this.wrapper;
         const obs    = new ResizeObserver(() => {
             requestAnimationFrame(() => {
+                this.resizing = true;
                 this.setCanvasSize();
+                this.render(this.world.prevTrueMap,true);
+                this.resizing = false;
             });
         });
         obs.observe(target);
@@ -97,12 +104,14 @@ export class Renderer {
     setCanvasSize(){
         const w = +window.getComputedStyle(this.wrapper).width.replace('px','');
         const h = +window.getComputedStyle(this.wrapper).height.replace('px','');
-        const pixelRatio  = window.devicePixelRatio;
+        // const pixelRatio  = window.devicePixelRatio;
 
-        this.canvasWidth  = w*this.scale*pixelRatio;
-        this.canvasHeight = h*this.scale*pixelRatio;
-        this.canvas.setAttribute('width', ""+this.canvasWidth);
-        this.canvas.setAttribute('height', ""+this.canvasHeight);
+        // this.canvasWidth  = w*this.scale*pixelRatio;
+        // this.canvasHeight = h*this.scale*pixelRatio;
+        this.canvas.setAttribute('width', ""+this.world.x);
+        this.canvas.setAttribute('height', ""+this.world.y);
+        // this.canvas.setAttribute('width', ""+this.canvasWidth);
+        // this.canvas.setAttribute('height', ""+this.canvasHeight);
 
         this.setLifeSize();
     }
