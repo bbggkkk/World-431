@@ -72,7 +72,7 @@ export class Renderer {
 
     setLifeSize(){
         const w = +window.getComputedStyle(this.wrapper).width.replace('px','');
-        this.lifeSize = +(w/this.world.x*this.scale).toFixed(4);
+        this.lifeSize = +(w/this.world.x*this.scale*window.devicePixelRatio).toFixed(4);
     }
 
     onResize(){
