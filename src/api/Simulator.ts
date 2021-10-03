@@ -1,4 +1,5 @@
 import { Grid } from "./Grid";
+import { Dot } from "./Dot";
 import { Renderer } from "./Renderer";
 
 export class Simulator extends Grid {
@@ -42,6 +43,11 @@ export class Simulator extends Grid {
         return cnt;
     }
 
+    updateDot(position:string, dot:Dot){
+        const cnt = this.cntIsLife(position);
+        const dotWasList = dot.life;
+    }
+
     getNeighbor(position:string):Array<string>{
         const [ y, x ]:Array<number> = position.split('-').map(item => +item);
         const index = (y:number,x:number):number => {
@@ -69,6 +75,9 @@ export class Simulator extends Grid {
 
     update():Simulator{
         const updateTarget:Array<string> = this.getUpdateTarget();
+        // updateTarget.forEach((item:string) => {
+        //     this.updateDot(item, this.map[item]);
+        // });
         // console.log(this.prevMap);
         this.setMapList(updateTarget, (item:string) => {
             const cnt = this.cntIsLife(item);
