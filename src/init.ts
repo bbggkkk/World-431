@@ -29,7 +29,6 @@ const init = (setting:Setting) => {
     },{});
     const grid = new Simulator(setting, list);
     return grid;
-    
 }
 
 export default init;

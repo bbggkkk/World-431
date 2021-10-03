@@ -1,0 +1,1 @@
+(()=>{"use strict";self.fns={init:function(n){var s=n.setting,t=n.list;console.log(s,t)}},onmessage=function(n){var s=n.data,t=s.fn,i=s.input;self.fns[t](i)}})();

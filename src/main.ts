@@ -1,37 +1,22 @@
 import { Renderer } from './api/Renderer';
 import { createWorker } from './api/worker/Worker';
 
-import init from './init';
 import setting from './setting';
 import './style/style.scss';
+
+import { getFirstList } from './api/InitFn';
+import { initWorker }   from './api/worker/Worker';
 
 (async function(){
     const [x,y] = setting.worldSize;
     const size = x*y;
     const wrap = document.querySelector('#wrapper');
-    
 
+    // window.world    = init(setting);
+    // window.renderer = new Renderer(wrap as HTMLElement, window.world);
+    // window.world.start(window.renderer);
 
-    window.world    = init(setting);
-    window.renderer = new Renderer(wrap as HTMLElement, window.world);
-    window.world.start(window.renderer);
-
-    // window.demo  = new Demo(wrap as HTMLElement)
-
-    // for(let i=0; i<size; i++){
-
-    //     const $x = Math.floor(i/x);
-    //     const $y = i%y;
-
-    //     const tmp = document.createElement('div');
-    //     tmp.setAttribute('data-idx',`${$x}-${$y}-${i}`);
-    //     tmp.addEventListener('click',() => { window.world.toggle(`${$x}-${$y}-${i}`); window.demo.render(window.world); } );
-    //     wrap?.append(tmp);
-    // }
-
-    // window.demo.render(window.world);
-
-    // window.world.start();
-
-
+    const list = getFirstList(x, y);
+    const worker = initWorker((list:Array<number>) => { return list; });
+    worker([1,2,3,4,5,6,7,8,9]).then(data => console.log(data) );
 })();

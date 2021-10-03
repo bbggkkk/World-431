@@ -1,0 +1,1 @@
+(()=>{"use strict";onmessage=function(s){s.data}})();
