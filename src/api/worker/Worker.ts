@@ -9,7 +9,7 @@ export const createWorker = (fn:Function) => {
         const worker = new Worker(url);
 
         let resolve:any, reject:any;
-        worker.onmessage = ({data}) => {
+        worker.onmessage = ({data}) => { 
             resolve(data);
         }
 
@@ -24,34 +24,40 @@ export const createWorker = (fn:Function) => {
 }
 
 export const initWorker = (fn:Function) => {
-    const thread  = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4;
-    const workers = new Array(thread).fill(createWorker(fn));
-    console.log(workers);
+    const thread  = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 1;
+    const workers = new Array(thread).fill(0).map(() => createWorker(fn));
     return (data:any) => new Promise((res, rej) => {
         const datas    = balancing(data);
-        const promises = [];
-        for(let i=0; i<thread; i++){
-            promises.push(workers[i](datas[i]));
-        }
-        // const promises = workers.map((item, idx) => { console.log(item); return item(datas[idx]); } );
-        console.log(promises);
-        // Promise.all(promises).then(data => console.log(data) );
+        const promises = workers.map((item, idx) => { return item(datas[idx]); } );
+        res(Promise.all(promises).then(data => data.flat()));
     });
 }
 
 export const balancing = (list:any) => {
-    const thread = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4;
+    const thread = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 1;
+
+    const entries = Array.isArray(list) ? list : Object.entries(list);
+
     const cnt = thread;
-    const divLng = Math.floor(list.length/cnt);
-    const am = list.length%cnt;
+    const divLng = Math.floor(entries.length/cnt);
+    const am = entries.length%cnt;
 
     let arr = [];
     let idx = 0;
-    for(let i=0; i<thread; i++){
-        let num = divLng;
-        if(i < am)  num++;
-        arr.push(list.slice(idx,idx+num));
-        idx += num;
+    if(Array.isArray(list)){
+        for(let i=0; i<thread; i++){
+            let num = divLng;
+            if(i < am)  num++;
+            arr.push(entries.slice(idx,idx+num));
+            idx += num;
+        }
+    }else{
+        for(let i=0; i<thread; i++){
+            let num = divLng;
+            if(i < am)  num++;
+            arr.push(Object.fromEntries(entries.slice(idx,idx+num)));
+            idx += num;
+        }
     }
-    return arr.filter(item => item.length);
+    return arr.filter(item => (Array.isArray(item) && item.length) || !Array.isArray(item));
 }

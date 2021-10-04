@@ -4,7 +4,7 @@ import { createWorker } from './api/worker/Worker';
 import setting from './setting';
 import './style/style.scss';
 
-import { getFirstList } from './api/InitFn';
+import { getFirstList, getUpdateTarget } from './api/InitFn';
 import { initWorker }   from './api/worker/Worker';
 
 (async function(){
@@ -17,6 +17,9 @@ import { initWorker }   from './api/worker/Worker';
     // window.world.start(window.renderer);
 
     const list = getFirstList(x, y);
-    const worker = initWorker((list:Array<number>) => { return list; });
-    worker([1,2,3,4,5,6,7,8,9]).then(data => console.log(data) );
+    // const trueMap = Object.keys(list).filter(item => list[item]);
+    const worker = initWorker(getUpdateTarget);
+    console.time('log start');
+    worker(list).then(data => console.log(data) );
+    console.timeEnd('log start');
 })();
