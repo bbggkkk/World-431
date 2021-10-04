@@ -1,5 +1,5 @@
 const setting:Setting = {
-    worldSize : [100, 100],   // [ x size , y size ]
+    worldSize : [512, 512],   // [ x size , y size ]
     tickTime  : 50,          // number ms (1000 === 1000ms === 1s)
     
     backgroundColor : '#fff',

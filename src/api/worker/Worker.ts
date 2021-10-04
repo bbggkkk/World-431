@@ -29,7 +29,7 @@ export const initWorker = (fn:Function) => {
     return (data:any) => new Promise((res, rej) => {
         const datas    = balancing(data);
         const promises = workers.map((item, idx) => { return item(datas[idx]); } );
-        res(Promise.all(promises).then(data => data.flat()));
+        res(Promise.all(promises).then(data => { console.log(data); return data.flat(); } ));
     });
 }
 

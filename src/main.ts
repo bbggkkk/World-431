@@ -17,9 +17,15 @@ import { initWorker }   from './api/worker/Worker';
     // window.world.start(window.renderer);
 
     const list = getFirstList(x, y);
+    const trueList = Object.keys(list).reduce((acc:any, item:string) => {
+        if(list[item]){
+            acc[item] = true;
+        }
+        return acc;
+    },{});
     // const trueMap = Object.keys(list).filter(item => list[item]);
     const worker = initWorker(getUpdateTarget);
     console.time('log start');
-    worker(list).then(data => console.log(data) );
+    await worker( trueList );
     console.timeEnd('log start');
 })();
