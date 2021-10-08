@@ -7,6 +7,7 @@ declare global {
     interface Window {
         dotList: Array<Dot>;
         world: Simulator;
+        workers:any;
         renderer: Renderer;
     }
     interface Setting {

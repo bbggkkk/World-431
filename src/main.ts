@@ -1,11 +1,12 @@
+import init from './init';
 import { Renderer } from './api/Renderer';
 import { createWorker } from './api/worker/Worker';
 
 import setting from './setting';
 import './style/style.scss';
 
-import { getFirstList } from './api/InitFn';
-import { initWorker }   from './api/worker/Worker';
+// import { getFirstList, getUpdateTarget } from './api/InitFn';
+// import { initWorker }   from './api/worker/Worker';
 
 (async function(){
     const [x,y] = setting.worldSize;
